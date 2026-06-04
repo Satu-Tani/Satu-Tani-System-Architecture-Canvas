@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SatuTani - System Integration & Architecture Canvas</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@500;700;800&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        emerald: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065f46',
+                            950: '#022c22',
+                        },
+                        gold: {
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                        },
+                        slate: {
+                            900: '#0f172a',
+                            950: '#020617',
+                        }
+                    },
+                    fontFamily: {
+                        urbanist: ['Urbanist', 'sans-serif'],
+                        inter: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #020617;
+        }
+        h1, h2, h3, h4 {
+            font-family: 'Urbanist', sans-serif;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #059669;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #047857;
+        }
+        .glowing-node {
+            box-shadow: 0 0 15px rgba(5, 150, 105, 0.4);
+            transition: all 0.3s ease;
+        }
+        .glowing-node:hover {
+            box-shadow: 0 0 25px rgba(5, 150, 105, 0.8);
+            transform: translateY(-2px);
+        }
+        .glowing-external {
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.3);
+            transition: all 0.3s ease;
+        }
+        .glowing-external:hover {
+            box-shadow: 0 0 25px rgba(245, 158, 11, 0.7);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body class="text-slate-100 min-h-screen overflow-x-hidden">
+
+    <!-- TOP HEADER -->
+    <header class="border-b border-emerald-950/80 bg-slate-950/80 backdrop-blur sticky top-0 z-50 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="bg-emerald-600 text-slate-950 p-2.5 rounded-xl font-bold text-2xl shadow-[0_0_15px_rgba(5,150,105,0.5)]">
+                    <i class="fa-solid fa-seedling"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-extrabold tracking-tight text-white">Satu<span class="text-emerald-600">Tani</span></h1>
+                    <p class="text-xs text-slate-400 font-semibold tracking-wider">SYSTEM INTEGRATION &amp; ARCHITECTURE CANVAS</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4 text-xs font-semibold">
+                <div class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-950/40 border border-emerald-800/40 text-emerald-100">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-600 animate-pulse"></span>
+                    PILOT PHASE (JATIM)
+                </div>
+                <div class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-950/40 border border-amber-800/40 text-amber-100">
+                    <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                    EXTERNAL BOUNDARY VERIFIED
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN BODY CONTAINER -->
+    <main class="max-w-7xl mx-auto px-6 py-8">
+        
+        <!-- INTRO PANEL -->
+        <div class="mb-8 p-6 rounded-2xl bg-gradient-to-r from-emerald-950/30 via-slate-900 to-slate-900 border border-emerald-900/30">
+            <h2 class="text-xl font-bold text-white mb-2"><i class="fa-solid fa-circle-nodes text-emerald-600 mr-2"></i> Peta Orkestrasi Sistem &amp; Batas Regulasi</h2>
+            <p class="text-sm text-slate-400 leading-relaxed">
+                Kanvas arsitektur ini memetakan bagaimana sistem internal **SatuTani** yang ramping (*asset-light*) berinteraksi secara aman dengan infrastruktur fisik milik pemerintah (BULOG) dan pihak ketiga lainnya (Payment Gateway, Mapbox, dan Bank). Sistem dirancang terisolasi (*low-coupling*) guna meminimalkan hambatan perizinan formal serta mendukung integrasi *asinkronous* yang sangat andal di pedesaan.
+            </p>
+        </div>
+
+        <!-- CANVAS TABS -->
+        <div class="flex gap-2 mb-6 border-b border-slate-800 pb-px">
+            <button onclick="switchTab('topology')" id="tab-topology" class="px-5 py-3 text-sm font-bold border-b-2 border-emerald-600 text-emerald-500 transition-all flex items-center gap-2">
+                <i class="fa-solid fa-network-wired"></i> Topologi Arsitektur
+            </button>
+            <button onclick="switchTab('flow')" id="tab-flow" class="px-5 py-3 text-sm font-bold border-b-2 border-transparent text-slate-400 hover:text-white transition-all flex items-center gap-2">
+                <i class="fa-solid fa-arrows-spin"></i> Simulasi Alur Data
+            </button>
+            <button onclick="switchTab('compliance')" id="tab-compliance" class="px-5 py-3 text-sm font-bold border-b-2 border-transparent text-slate-400 hover:text-white transition-all flex items-center gap-2">
+                <i class="fa-solid fa-shield-halved"></i> Kepatuhan &amp; Keamanan
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <!-- LEFT COLUMN: INTERACTIVE VISUALIZER (COLS 8) -->
+            <div class="lg:col-span-8 flex flex-col gap-6">
+                
+                <!-- TAB 1: TOPOLOGY CANVAS -->
+                <div id="content-topology" class="bg-slate-950 rounded-2xl border border-slate-800/80 p-6 flex flex-col">
+                    <div class="flex justify-between items-center mb-6">
+                        <div>
+                            <h3 class="text-lg font-bold text-white">Kanvas Topologi &amp; Integrasi API</h3>
+                            <p class="text-xs text-slate-400">Klik pada komponen mana pun untuk membaca detail teknis dan alurnya.</p>
+                        </div>
+                        <div class="flex gap-2 text-xs">
+                            <span class="px-2.5 py-1 rounded bg-emerald-950/60 border border-emerald-600/30 text-emerald-500 font-semibold flex items-center gap-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span> Internal SatuTani
+                            </span>
+                            <span class="px-2.5 py-1 rounded bg-amber-950/60 border border-amber-600/30 text-amber-500 font-semibold flex items-center gap-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> External Third Party
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- GEOGRAPHIC MAP / SYSTEM TOPOLOGY LAYOUT -->
+                    <div class="relative w-full aspect-[4/3] bg-slate-900/50 rounded-xl border border-slate-800 overflow-hidden flex items-center justify-center p-4">
+                        
+                        <!-- Connecting Glowing SVG Lines -->
+                        <svg class="absolute inset-0 w-full h-full pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+                            <!-- UI to Backend Connections -->
+                            <line x1="18%" y1="22.5%" x2="50%" y2="42.5%" stroke="#059669" stroke-width="2" stroke-dasharray="6,6" opacity="0.6" />
+                            <line x1="18%" y1="52.5%" x2="50%" y2="42.5%" stroke="#059669" stroke-width="2" stroke-dasharray="6,6" opacity="0.6" />
+                            <!-- Backend to DB Connections -->
+                            <line x1="50%" y1="42.5%" x2="50%" y2="77.5%" stroke="#059669" stroke-width="3" opacity="0.7" />
+                            <!-- Backend to External Connections -->
+                            <line x1="50%" y1="42.5%" x2="82%" y2="21.5%" stroke="#f59e0b" stroke-width="2" stroke-dasharray="4,4" opacity="0.6" />
+                            <line x1="50%" y1="42.5%" x2="82%" y2="40.5%" stroke="#f59e0b" stroke-width="2" stroke-dasharray="4,4" opacity="0.6" />
+                            <line x1="50%" y1="42.5%" x2="82%" y2="59.5%" stroke="#f59e0b" stroke-width="2" stroke-dasharray="4,4" opacity="0.6" />
+                            <line x1="50%" y1="42.5%" x2="82%" y2="78.5%" stroke="#f59e0b" stroke-width="2" stroke-dasharray="4,4" opacity="0.6" />
+                        </svg>
+
+                        <!-- GRID OF COMPONENTS -->
+                        <!-- 1. Frontend Layer (Left) -->
+                        <div class="absolute left-[5%] top-[5%] w-[26%] text-[10px] font-bold text-slate-500 uppercase tracking-wider pl-1">Lapisan Antarmuka (UI)</div>
+                        
+                        <!-- Vue.js Node -->
+                        <div style="top: 15%;" class="absolute left-[5%] w-[26%] h-[15%]">
+                            <div onclick="selectNode('vue')" class="glowing-node cursor-pointer h-full bg-slate-950 border border-emerald-500/30 p-3 rounded-xl flex items-center gap-3">
+                                <div class="bg-emerald-600/10 text-emerald-500 p-2 rounded-lg text-lg w-10 h-10 flex items-center justify-center flex-shrink-0">
+                                    <i class="fa-brands fa-vuejs"></i>
+                                </div>
+                                <div class="text-left overflow-hidden">
+                                    <h4 class="text-xs font-bold text-white truncate">Vue.js Web Portal</h4>
+                                    <p class="text-[10px] text-slate-400 truncate">Koordinator Gapoktan (Hulu)</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Flutter Node -->
+                        <div style="top: 45%;" class="absolute left-[5%] w-[26%] h-[15%]">
+                            <div onclick="selectNode('flutter')" class="glowing-node cursor-pointer h-full bg-slate-950 border border-emerald-500/30 p-3 rounded-xl flex items-center gap-3">
+                                <div class="bg-emerald-600/10 text-emerald-500 p-2 rounded-lg text-lg w-10 h-10 flex items-center justify-center flex-shrink-0">
+                                    <i class="fa-solid fa-mobile-screen-button"></i>
+                                </div>
+                                <div class="text-left overflow-hidden">
+                                    <h4 class="text-xs font-bold text-white truncate">Flutter Mobile</h4>
+                                    <p class="text-[10px] text-slate-400 truncate">B2B Buyer &amp; Saprotan (Hilir)</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 2. Serverless Backend Node (Center) -->
+                        <div style="top: 30%;" class="absolute left-[38%] w-[24%] h-[25%] flex flex-col justify-between">
+                            <div class="text-[10px] font-bold text-slate-500 uppercase tracking-wider text-center w-full">Backend &amp; Processing</div>
+                            
+                            <!-- Express.js Node -->
+                            <div onclick="selectNode('express')" class="glowing-node cursor-pointer w-full bg-slate-950 border-2 border-emerald-500/60 p-4 rounded-2xl flex flex-col items-center text-center justify-center gap-1.5 h-[80%] relative">
+                                <div class="absolute -top-3 px-2 py-0.5 rounded bg-emerald-600 text-slate-950 font-bold text-[8px] tracking-widest uppercase">SERVERLESS</div>
+                                <div class="bg-emerald-600 text-slate-950 p-2 rounded-xl text-lg w-10 h-10 flex items-center justify-center font-bold flex-shrink-0">
+                                    EX
+                                </div>
+                                <div class="mt-0.5 overflow-hidden w-full">
+                                    <h4 class="text-xs font-bold text-white truncate">Express.js API Node</h4>
+                                    <p class="text-[9px] text-emerald-500 font-semibold truncate">Google Cloud Run</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 3. Database Layer (Center-Bottom) -->
+                        <div style="top: 70%;" class="absolute left-[38%] w-[24%] h-[15%]">
+                            <!-- PostgreSQL Node -->
+                            <div onclick="selectNode('postgres')" class="glowing-node cursor-pointer h-full bg-slate-950 border border-emerald-500/30 p-3 rounded-xl flex items-center justify-center gap-3">
+                                <div class="bg-emerald-600/10 text-emerald-500 p-2 rounded-lg text-base flex-shrink-0">
+                                    <i class="fa-solid fa-database"></i>
+                                </div>
+                                <div class="text-left overflow-hidden">
+                                    <h4 class="text-xs font-bold text-white truncate">PostgreSQL + PostGIS</h4>
+                                    <p class="text-[9px] text-slate-400 truncate">Database &amp; Spatial Geo</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 4. External Integrations Layer (Right) -->
+                        <div class="absolute right-[5%] top-[5%] w-[26%] text-[10px] font-bold text-slate-500 uppercase tracking-wider text-right pr-1">Integrasi Eksternal</div>
+                        
+                        <!-- Gemini AI Node -->
+                        <div style="top: 15%;" class="absolute right-[5%] w-[26%] h-[13%]">
+                            <div onclick="selectNode('gemini')" class="glowing-external cursor-pointer h-full bg-slate-950 border border-amber-500/30 p-2 rounded-xl flex items-center gap-2.5">
+                                <div class="bg-amber-500/10 text-amber-500 p-2 rounded-lg text-base w-8 h-8 flex items-center justify-center flex-shrink-0">
+                                    <i class="fa-solid fa-brain"></i>
+                                </div>
+                                <div class="text-left overflow-hidden">
+                                    <h4 class="text-xs font-bold text-white truncate">Gemini 1.5 Flash</h4>
+                                    <p class="text-[9px] text-slate-400 truncate">Intelligent OCR Parser</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mapbox API Node -->
+                        <div style="top: 34%;" class="absolute right-[5%] w-[26%] h-[13%]">
+                            <div onclick="selectNode('mapbox')" class="glowing-external cursor-pointer h-full bg-slate-950 border border-amber-500/30 p-2 rounded-xl flex items-center gap-2.5">
+                                <div class="bg-amber-500/10 text-amber-500 p-2 rounded-lg text-base w-8 h-8 flex items-center justify-center flex-shrink-0">
+                                    <i class="fa-solid fa-route"></i>
+                                </div>
+                                <div class="text-left overflow-hidden">
+                                    <h4 class="text-xs font-bold text-white truncate">Mapbox Directions</h4>
+                                    <p class="text-[9px] text-slate-400 truncate">Clustering &amp; Logistics</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- BULOG Gudang Node -->
+                        <div style="top: 53%;" class="absolute right-[5%] w-[26%] h-[13%]">
+                            <div onclick="selectNode('bulog')" class="glowing-external cursor-pointer h-full bg-slate-950 border border-amber-500/30 p-2 rounded-xl flex items-center gap-2.5">
+                                <div class="bg-amber-500/10 text-amber-500 p-2 rounded-lg text-base w-8 h-8 flex items-center justify-center flex-shrink-0">
+                                    <i class="fa-solid fa-warehouse"></i>
+                                </div>
+                                <div class="text-left overflow-hidden">
+                                    <h4 class="text-xs font-bold text-white truncate">Gudang BULOG</h4>
+                                    <p class="text-[9px] text-slate-400 truncate">Multi-Warehouse Inventory</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Midtrans/Xendit Node -->
+                        <div style="top: 72%;" class="absolute right-[5%] w-[26%] h-[13%]">
+                            <div onclick="selectNode('payment')" class="glowing-external cursor-pointer h-full bg-slate-950 border border-amber-500/30 p-2 rounded-xl flex items-center gap-2.5">
+                                <div class="bg-amber-500/10 text-amber-500 p-2 rounded-lg text-base w-8 h-8 flex items-center justify-center flex-shrink-0">
+                                    <i class="fa-solid fa-wallet"></i>
+                                </div>
+                                <div class="text-left overflow-hidden">
+                                    <h4 class="text-xs font-bold text-white truncate">Midtrans / Xendit</h4>
+                                    <p class="text-[9px] text-slate-400 truncate">Payment &amp; Payout API</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- TAB 2: FLOW PIPELINE SIMULATOR -->
+                <div id="content-flow" class="bg-slate-950 rounded-2xl border border-slate-800/80 p-6 hidden flex flex-col gap-6">
+                    <div>
+                        <h3 class="text-lg font-bold text-white">Simulasi Alur Data End-to-End</h3>
+                        <p class="text-xs text-slate-400">Pilih tahapan alur di bawah untuk melihat interaksi data hulu ke hilir secara asinkron.</p>
+                    </div>
+
+                    <!-- Flow Stepper -->
+                    <div class="grid grid-cols-6 gap-2 border-b border-slate-800 pb-4 text-center text-[11px] md:text-xs">
+                        <button onclick="selectFlowStep(1)" id="step-btn-1" class="p-2 font-bold rounded-lg bg-emerald-950/60 border border-emerald-600 text-emerald-400 transition-all">
+                            1. Onboarding
+                        </button>
+                        <button onclick="selectFlowStep(2)" id="step-btn-2" class="p-2 font-bold rounded-lg bg-slate-900 border border-transparent text-slate-400 hover:text-white transition-all">
+                            2. AI OCR
+                        </button>
+                        <button onclick="selectFlowStep(3)" id="step-btn-3" class="p-2 font-bold rounded-lg bg-slate-900 border border-transparent text-slate-400 hover:text-white transition-all">
+                            3. Logistik
+                        </button>
+                        <button onclick="selectFlowStep(4)" id="step-btn-4" class="p-2 font-bold rounded-lg bg-slate-900 border border-transparent text-slate-400 hover:text-white transition-all">
+                            4. Payout 90/10
+                        </button>
+                        <button onclick="selectFlowStep(5)" id="step-btn-5" class="p-2 font-bold rounded-lg bg-slate-900 border border-transparent text-slate-400 hover:text-white transition-all">
+                            5. Redeem
+                        </button>
+                        <button onclick="selectFlowStep(6)" id="step-btn-6" class="p-2 font-bold rounded-lg bg-slate-900 border border-transparent text-slate-400 hover:text-white transition-all">
+                            6. KUR Score
+                        </button>
+                    </div>
+
+                    <!-- Interactive Diagram Flow Boxes -->
+                    <div class="bg-slate-900/40 border border-slate-800 rounded-xl p-6 min-h-[220px] flex flex-col justify-between relative overflow-hidden">
+                        
+                        <!-- Watermark of Selected Step -->
+                        <div id="step-watermark" class="absolute -right-10 -bottom-10 text-[180px] font-extrabold text-slate-800/10 pointer-events-none select-none">
+                            1
+                        </div>
+
+                        <!-- Step Content -->
+                        <div class="z-10">
+                            <span id="step-badge" class="px-2.5 py-1 text-[10px] font-extrabold rounded bg-emerald-600 text-slate-950 uppercase tracking-widest">ONBOARDING &amp; SPATIAL</span>
+                            <h4 id="step-title" class="text-xl font-bold text-white mt-3 mb-2">Menggambar Poligon Batas Lahan Petani</h4>
+                            <p id="step-description" class="text-sm text-slate-400 leading-relaxed max-w-2xl">
+                                Koordinator Gapoktan masuk ke Web Portal Vue.js untuk mendaftarkan petani gurem. Menggunakan peta interaktif Mapbox/Leaflet, koordinator menggambar batas fisik sawah (poligon). Koordinat GeoJSON ditransmisikan ke Express.js dan diproses otomatis oleh PostGIS menggunakan perintah `ST_IsValid` dan `ST_Area` untuk menjamin luas bersih lahan dan mendeteksi data tumpang dian secara instan.
+                            </p>
+                        </div>
+
+                        <!-- Interactive Diagram Flow Boxes (Dynamic) -->
+                        <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-center mt-6 z-10 text-xs">
+                            <div id="flow-box-1" class="bg-slate-950 p-3 rounded-lg border border-emerald-500/30 text-center">
+                                <div class="flow-title font-bold text-white">Vue.js Web Portal</div>
+                                <div class="flow-sub text-[10px] text-slate-400 mt-1">Menggambar Poligon</div>
+                            </div>
+                            <div class="text-center text-slate-600 hidden md:block">
+                                <i class="fa-solid fa-circle-arrow-right text-lg text-emerald-600"></i>
+                            </div>
+                            <div id="flow-box-2" class="bg-slate-950 p-3 rounded-lg border border-emerald-500/30 text-center">
+                                <div class="flow-title font-bold text-white">Express.js API Node</div>
+                                <div class="flow-sub text-[10px] text-slate-400 mt-1">Penerima GeoJSON</div>
+                            </div>
+                            <div class="text-center text-slate-600 hidden md:block">
+                                <i class="fa-solid fa-circle-arrow-right text-lg text-emerald-600"></i>
+                            </div>
+                            <div id="flow-box-3" class="bg-slate-950 p-3 rounded-lg border border-emerald-600 text-center font-bold text-slate-950 shadow-[0_0_15px_rgba(5,150,105,0.3)]">
+                                <div class="flow-title text-emerald-500">PostgreSQL / PostGIS</div>
+                                <div class="flow-sub text-[10px] text-slate-400 mt-1">ST_IsValid Validation</div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- TAB 3: COMPLIANCE & SECURITY -->
+                <div id="content-compliance" class="bg-slate-950 rounded-2xl border border-slate-800/80 p-6 hidden flex flex-col gap-6">
+                    <div>
+                        <h3 class="text-lg font-bold text-white">Hub Keamanan &amp; Kepatuhan Regulasi</h3>
+                        <p class="text-xs text-slate-400">Bagaimana SatuTani melindungi integritas data dan memenuhi standar kepatuhan nasional (BI, OJK, UU PDP).</p>
+                    </div>
+
+                    <!-- Compliance Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Card 1: UU PDP -->
+                        <div class="bg-slate-900/60 border border-slate-800/80 p-5 rounded-xl flex gap-4">
+                            <div class="text-emerald-500 text-2xl mt-1"><i class="fa-solid fa-user-shield"></i></div>
+                            <div>
+                                <h4 class="font-bold text-white text-sm mb-1">UU PDP No. 27/2022</h4>
+                                <p class="text-xs text-slate-400 leading-relaxed mb-2">Perlindungan data sensitif secara penuh dengan persetujuan eksplisit digital (*consent*) oleh Gapoktan.</p>
+                                <div class="flex gap-1.5 flex-wrap">
+                                    <span class="px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-400 text-[9px] font-mono border border-emerald-800">AES-256 Storage</span>
+                                    <span class="px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-400 text-[9px] font-mono border border-emerald-800">Anonymized GPS</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 2: Closed-Loop Token -->
+                        <div class="bg-slate-900/60 border border-slate-800/80 p-5 rounded-xl flex gap-4">
+                            <div class="text-amber-500 text-2xl mt-1"><i class="fa-solid fa-coins"></i></div>
+                            <div>
+                                <h4 class="font-bold text-white text-sm mb-1">BI E-Money Exemption</h4>
+                                <p class="text-xs text-slate-400 leading-relaxed mb-2">Sistem *Kredit Digital* bersifat tertutup (*closed-loop utility token*), aman tanpa memerlukan izin e-money BI.</p>
+                                <div class="flex gap-1.5 flex-wrap">
+                                    <span class="px-1.5 py-0.5 rounded bg-amber-950 text-amber-400 text-[9px] font-mono border border-amber-800">Non-Cashout</span>
+                                    <span class="px-1.5 py-0.5 rounded bg-amber-950 text-amber-400 text-[9px] font-mono border border-amber-800">Saprotan Only</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 3: Payment Gateway BI Licensed -->
+                        <div class="bg-slate-900/60 border border-slate-800/80 p-5 rounded-xl flex gap-4">
+                            <div class="text-emerald-500 text-2xl mt-1"><i class="fa-solid fa-shield-halved"></i></div>
+                            <div>
+                                <h4 class="font-bold text-white text-sm mb-1">Authorized Disbursement</h4>
+                                <p class="text-xs text-slate-400 leading-relaxed mb-2">Proses transfer 90% tunai ke petani diproses aman lewat Payment Gateway berlisensi resmi Bank Indonesia.</p>
+                                <div class="flex gap-1.5 flex-wrap">
+                                    <span class="px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-400 text-[9px] font-mono border border-emerald-800">PCI-DSS Level 1</span>
+                                    <span class="px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-400 text-[9px] font-mono border border-emerald-800">IP Whitelisting</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 4: Audit Trail Ledger -->
+                        <div class="bg-slate-900/60 border border-slate-800/80 p-5 rounded-xl flex gap-4">
+                            <div class="text-amber-500 text-2xl mt-1"><i class="fa-solid fa-receipt"></i></div>
+                            <div>
+                                <h4 class="font-bold text-white text-sm mb-1">Double-Entry Bookkeeping</h4>
+                                <p class="text-xs text-slate-400 leading-relaxed mb-2">Sirkulasi sisa Kredit Digital divalidasi ketat di Express.js menggunakan pencatatan ganda tak termanipulasi.</p>
+                                <div class="flex gap-1.5 flex-wrap">
+                                    <span class="px-1.5 py-0.5 rounded bg-amber-950 text-amber-400 text-[9px] font-mono border border-amber-800">Immutable Ledger</span>
+                                    <span class="px-1.5 py-0.5 rounded bg-amber-950 text-amber-400 text-[9px] font-mono border border-amber-800">No SQL Injection</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- RIGHT COLUMN: DETAILED INFO PANEL (COLS 4) -->
+            <div class="lg:col-span-4 flex flex-col gap-6">
+                
+                <!-- COMPONENT DETAIL PANEL -->
+                <div class="bg-slate-950 rounded-2xl border border-slate-800/80 p-6 flex flex-col justify-between min-h-[480px]">
+                    
+                    <div id="detail-loading-state" class="flex flex-col items-center justify-center text-center py-20 gap-4">
+                        <div class="text-emerald-500 text-5xl animate-bounce">
+                            <i class="fa-solid fa-seedling"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-white">Architecture Inspector</h4>
+                            <p class="text-xs text-slate-400 px-4 mt-2">Klik komponen di peta atau simulator di sebelah kiri untuk membedah data teknis, peran, dan arsitekturnya di sini.</p>
+                        </div>
+                    </div>
+
+                    <div id="detail-content-state" class="hidden">
+                        <!-- Component Badge -->
+                        <div class="flex justify-between items-start mb-4">
+                            <span id="detail-badge" class="px-2.5 py-1 text-[9px] font-extrabold rounded bg-emerald-600 text-slate-950 uppercase tracking-widest">INTERNAL SYSTEM</span>
+                            <span id="detail-tech" class="text-xs text-emerald-500 font-bold font-mono">Vue.js Framework</span>
+                        </div>
+
+                        <!-- Name & Description -->
+                        <h3 id="detail-name" class="text-xl font-extrabold text-white mb-2">Web Dashboard (MDM)</h3>
+                        <p id="detail-desc" class="text-xs text-slate-400 leading-relaxed mb-5">
+                            Menjadi portal utama yang dioperasikan koordinator Gapoktan untuk melakukan registrasi lahan secara spasial dan mengajukan penjualan panen langsung dengan sistem offering harga.
+                        </p>
+
+                        <!-- Data Fields Schema -->
+                        <div class="border-t border-slate-800/80 pt-4 flex flex-col gap-3">
+                            <div>
+                                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Format Data Masukan (Inputs)</span>
+                                <div id="detail-inputs" class="bg-slate-900 border border-slate-800/60 rounded px-2.5 py-1.5 font-mono text-[10px] text-emerald-400 mt-1 whitespace-pre-wrap"></div>
+                            </div>
+                            <div>
+                                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Format Data Keluaran (Outputs)</span>
+                                <div id="detail-outputs" class="bg-slate-900 border border-slate-800/60 rounded px-2.5 py-1.5 font-mono text-[10px] text-emerald-400 mt-1 whitespace-pre-wrap"></div>
+                            </div>
+                            <div>
+                                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Lapisan Keamanan (Security Context)</span>
+                                <p id="detail-security" class="text-xs text-slate-400 leading-relaxed mt-1"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footnote / Brand -->
+                    <div class="border-t border-slate-800/60 pt-4 mt-6 text-center">
+                        <p class="text-[10px] font-bold text-slate-600 tracking-wider">SATUTANI CORE SYSTEM DESIGN &copy; 2026</p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="text-center py-8 text-xs text-slate-600 border-t border-slate-900 mt-12 bg-slate-950/40">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center px-6 gap-4">
+            <p>Proyek Terdaftar: Hackathon PIDI x Digdaya Bank Indonesia Tahap II - 2026</p>
+            <p class="font-bold text-slate-400">Tim SatuTani (William Johan, Rafli, Reynaldo, Sudarmo)</p>
+        </div>
+    </footer>
+
+    <!-- INTERACTIVE JAVASCRIPT FOR DYNAMIC STATE MANAGEMENT -->
+    <script>
+        // Nodes database
+        const nodeData = {
+            vue: {
+                name: 'Vue.js Web Portal',
+                tech: 'Vue.js Framework',
+                badge: 'INTERNAL SYSTEM',
+                badgeStyle: 'bg-emerald-600 text-slate-950',
+                desc: 'Web Portal yang digunakan oleh koordinator Gapoktan (Kelompok Tani) di pedesaan untuk mendaftarkan lahan anggota secara kolektif, memetakan batas lahan (poligon geospasial) lewat peta interaktif, serta mengajukan pengiriman panen ke SatuTani.',
+                inputs: 'JSON: { \n  farmerId, \n  coordinates: [[lat, lng], ...], \n  identityFile: File(KTP/Sertifikat)\n}',
+                outputs: 'GeoJSON & HTTP Request: Penyerahan data poligon dan data petani ke Express.js.',
+                security: 'Menggunakan autentikasi berbasis token JWT. Akses dibatasi secara ketat hanya untuk koordinator Gapoktan yang terdaftar.'
+            },
+            flutter: {
+                name: 'Flutter Mobile App',
+                tech: 'Flutter Framework',
+                badge: 'INTERNAL SYSTEM',
+                badgeStyle: 'bg-emerald-600 text-slate-950',
+                desc: 'Satu aplikasi seluler dengan model antarmuka dinamis berbasis peran (Role-Based UI). Berfungsi ganda untuk pembeli B2B melakukan pemesanan komoditas serta untuk Toko Saprotan melayani penukaran Kredit Digital menggunakan QR Scanner.',
+                inputs: 'JSON: { \n  tokenScanResult, \n  buyerOrderQuantity \n}',
+                outputs: 'HTTP REST Calls: Pengajuan pemesanan stok B2B dan transaksi claim token.',
+                security: 'Penyimpanan token JWT secara aman di perangkat menggunakan Flutter Secure Storage (Keystore di Android & Keychain di iOS).'
+            },
+            express: {
+                name: 'Serverless Express.js API',
+                tech: 'Node.js / Express.js',
+                badge: 'INTERNAL CORE',
+                badgeStyle: 'bg-emerald-600 text-slate-950',
+                desc: 'Backend API utama SatuTani yang dideploy secara serverless di Google Cloud Run. Mengelola seluruh logika bisnis, otentikasi, validasi data, mutasi pembukuan Kredit Tani, dan orkestrasi ke API pihak ketiga secara asinkron.',
+                inputs: 'REST API Payloads (JSON) & Geometrical Coordinates',
+                outputs: 'JSON Responses & Database Transactions (Prisma ORM)',
+                security: 'Menggunakan otentikasi JWT, sistem enkripsi data in-transit SSL/TLS 1.3, dan arsitektur pengamanan API Rate Limiting.'
+            },
+            postgres: {
+                name: 'PostgreSQL + PostGIS',
+                tech: 'PostgreSQL Database',
+                badge: 'INTERNAL DATABASE',
+                badgeStyle: 'bg-emerald-600 text-slate-950',
+                desc: 'Database relasional handal untuk menampung seluruh data transaksi dan data spasial poligon lahan tani. Ekstensi PostGIS digunakan untuk query geospasial real-time (validasi luas lahan dan query radius).',
+                inputs: 'Prisma SQL Queries & GeoJSON Geometries',
+                outputs: 'Relational Data Rows & Spatial Queries (ST_Area, ST_IsValid)',
+                security: 'Database diisolasi secara privat dalam Virtual Private Cloud (VPC), enkripsi data statis (At-Rest), dan akses user database yang terbatas.'
+            },
+            gemini: {
+                name: 'Google Gemini 1.5 Flash API',
+                tech: 'AI Integrasi (Google Cloud)',
+                badge: 'EXTERNAL SYSTEM',
+                badgeStyle: 'bg-amber-600 text-slate-950',
+                desc: 'Modul AI eksternal yang diintegrasikan secara terisolasi sebagai asisten pembaca dokumen cerdas (Intelligent OCR). Gemini memproses gambar KTP, sertifikat tanah, atau kertas RDKK fisik menjadi data teks terstruktur JSON secara asinkron.',
+                inputs: 'HTTP Multi-part: { \n  documentImageBytes, \n  structuredOutputMimeType\n}',
+                outputs: 'JSON: { \n  nik, \n  fullName, \n  landSizeFormatted \n}',
+                security: 'Akses aman menggunakan enkripsi API Key yang dilindungi di level environment server backend, bebas dari risiko kebocoran data publik.'
+            },
+            mapbox: {
+                name: 'Mapbox Directions API',
+                tech: 'Logistics API Integration',
+                badge: 'EXTERNAL SYSTEM',
+                badgeStyle: 'bg-amber-600 text-slate-950',
+                desc: 'API navigasi dan pemetaan eksternal yang memproses data geospasial untuk melakukan optimasi logistik penjemputan barang massal oleh kurir dan perhitungan rute terpendek ke gudang BULOG.',
+                inputs: 'JSON: { \n  originCoords, \n  waypoints: [[lat, lng], ...], \n  destinationCoords\n}',
+                outputs: 'JSON: { \n  optimizedRouteLines, \n  distanceMeters, \n  durationSeconds \n}',
+                security: 'Penggunaan token akses Mapbox dibatasi secara ketat berdasarkan rujukan domain situs web (Referrer-Restricted Token).'
+            },
+            bulog: {
+                name: 'Sistem Inventory BULOG',
+                tech: 'Warehouse Integration',
+                badge: 'EXTERNAL SYSTEM',
+                badgeStyle: 'bg-amber-600 text-slate-950',
+                desc: 'Infrastruktur fisik pergudangan BULOG yang dihubungkan ke sistem pencatatan SatuTani secara virtual menggunakan adapter API. Berfungsi menyimpan pasokan gabah/beras yang telah dibeli dari petani sebelum didistribusikan.',
+                inputs: 'JSON: { \n  consignmentId, \n  commodityType, \n  verifiedWeight\n}',
+                outputs: 'JSON: { \n  warehouseAcceptedState, \n  virtualInventoryUpdated: true \n}',
+                security: 'Pertukaran data status gudang divalidasi silang menggunakan tanda tangan kriptografi (Digital Signature) di tingkat integrasi backend.'
+            },
+            payment: {
+                name: 'Payment Gateway (Midtrans/Xendit)',
+                tech: 'Fintech Payment Integration',
+                badge: 'EXTERNAL SYSTEM',
+                badgeStyle: 'bg-amber-600 text-slate-950',
+                desc: 'Gerbang pembayaran formal bersertifikasi Bank Indonesia. Berfungsi menyalurkan 90% dana tunai secara instan ke rekening petani (Disbursement API), memproses deposit B2B via Virtual Account, serta settlement mingguan ke Toko Saprotan.',
+                inputs: 'JSON: { \n  disbursementDetails, \n  targetBankCode, \n  amountRupiah\n}',
+                outputs: 'JSON: { \n  transactionStatus, \n  referenceId, \n  completedAt \n}',
+                security: 'Tingkat enkripsi data PCI-DSS Level 1 dan otentikasi dua arah menggunakan Callback IP Whitelisting dan Token Autentikasi.'
+            }
+        };
+
+        // Select node and load its data to the detail card
+        function selectNode(nodeKey) {
+            const data = nodeData[nodeKey];
+            if (!data) return;
+
+            document.getElementById('detail-loading-state').classList.add('hidden');
+            const content = document.getElementById('detail-content-state');
+            content.classList.remove('hidden');
+
+            // Load values
+            document.getElementById('detail-name').innerText = data.name;
+            document.getElementById('detail-tech').innerText = data.tech;
+            document.getElementById('detail-desc').innerText = data.desc;
+            document.getElementById('detail-inputs').innerText = data.inputs;
+            document.getElementById('detail-outputs').innerText = data.outputs;
+            document.getElementById('detail-security').innerText = data.security;
+
+            // Load and adapt Badge Style
+            const badge = document.getElementById('detail-badge');
+            badge.className = `px-2.5 py-1 text-[9px] font-extrabold rounded uppercase tracking-widest ${data.badgeStyle}`;
+            badge.innerText = data.badge;
+        }
+
+        // Tab Switcher Logic
+        function switchTab(tabName) {
+            // Hide all tab contents
+            document.getElementById('content-topology').classList.add('hidden');
+            document.getElementById('content-flow').classList.add('hidden');
+            document.getElementById('content-compliance').classList.add('hidden');
+
+            // Reset tab button states
+            const buttons = ['tab-topology', 'tab-flow', 'tab-compliance'];
+            buttons.forEach(btnId => {
+                const btn = document.getElementById(btnId);
+                btn.className = "px-5 py-3 text-sm font-bold border-b-2 border-transparent text-slate-400 hover:text-white transition-all flex items-center gap-2";
+            });
+
+            // Show selected tab content and style its button
+            document.getElementById(`content-${tabName}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`tab-${tabName}`);
+            activeBtn.className = "px-5 py-3 text-sm font-bold border-b-2 border-emerald-600 text-emerald-500 transition-all flex items-center gap-2";
+        }
+
+        // Flow step database
+        const flowSteps = {
+            1: {
+                watermark: '1',
+                badge: 'ONBOARDING &amp; SPATIAL',
+                title: 'Menggambar Poligon Batas Lahan Petani',
+                desc: 'Koordinator Gapoktan masuk ke Web Portal Vue.js untuk mendaftarkan petani gurem. Menggunakan peta interaktif Mapbox/Leaflet, koordinator menggambar batas fisik sawah (poligon). Koordinat GeoJSON ditransmisikan ke Express.js dan diproses otomatis oleh PostGIS menggunakan perintah ST_IsValid dan ST_Area untuk menjamin luas bersih lahan dan mendeteksi data tumpang tindih secara instan.',
+                box1: { title: 'Vue.js Web Portal', sub: 'Menggambar Poligon' },
+                box2: { title: 'Express.js API Node', sub: 'Penerima GeoJSON' },
+                box3: { title: 'PostgreSQL / PostGIS', sub: 'ST_IsValid Validation' }
+            },
+            2: {
+                watermark: '2',
+                badge: 'AI PARSER &amp; ANTI-FRAUD',
+                title: 'Verifikasi Dokumen Cerdas Berbasis Gemini',
+                desc: 'Dokumen KTP, sertifikat lahan, atau kuitansi RDKK fisik diunggah oleh koordinator via web Vue.js dan disimpan aman di Google Cloud Storage. Express.js kemudian memanggil API Gemini 1.5 Flash menggunakan prompt terstruktur (Structured Output). Gemini mengekstrak data dari berkas gambar tersebut dan mengirimkan balik hasil pembacaan dalam bentuk JSON terstruktur untuk verifikasi identitas otomatis.',
+                box1: { title: 'Cloud Storage', sub: 'Penyimpanan Berkas' },
+                box2: { title: 'Express.js API Node', sub: 'Trigger Gemini API' },
+                box3: { title: 'Gemini 1.5 Flash', sub: 'Ekstraksi JSON Teks' }
+            },
+            3: {
+                watermark: '3',
+                badge: 'OPTIMIZED LOGISTICS',
+                title: 'Aggregasi Titik Jemput &amp; Pengiriman BULOG',
+                desc: 'Saat terkumpul pengajuan penjualan dari beberapa petani, Express.js menjalankan fungsi pengelompokan lokasi sawah terdekat (spatial clustering) berbasis koordinat GPS. Sistem lalu memanggil Mapbox Directions API untuk merekomendasikan rute penjemputan logistik multi-stop terdekat untuk armada kurir massal, lalu mengawal stok komoditas masuk ke jaringan gudang BULOG terdekat.',
+                box1: { title: 'Express.js API Node', sub: 'Spatial Clustering' },
+                box2: { title: 'Mapbox Directions API', sub: 'Optimasi Rute Kurir' },
+                box3: { title: 'Gudang BULOG', sub: 'Virtual Stock Lock' }
+            },
+            4: {
+                watermark: '4',
+                badge: '90/10 PAYOUT RULES',
+                title: 'Pembayaran Tunai &amp; Kredit Digital',
+                desc: 'Begitu petugas gudang BULOG memverifikasi berat akhir komoditas, database PostgreSQL mengunci stok dan sistem Express.js memicu sistem bayar dengan proporsi terarah: 90% nilai transaksi dicairkan otomatis berupa uang tunai ke bank/e-wallet petani via Midtrans/Xendit Disbursement API, sedangkan 10% dikonversi menjadi Kredit Digital yang dicatatkan di database internal.',
+                box1: { title: 'Gudang BULOG', sub: 'Verifikasi Berat' },
+                box2: { title: 'Payment API (Xendit)', sub: 'Disbursement 90% Tunai' },
+                box3: { title: 'PostgreSQL / Ledger', sub: 'Pemberian 10% Kredit' }
+            },
+            5: {
+                watermark: '5',
+                badge: 'TOKEN REDEMPTION',
+                title: 'Penebusan Saprotan di Merchant Lokal',
+                desc: 'Petani mendatangi Toko Saprotan lokal mitra terdekat untuk menukar Kredit Tani Digital mereka dengan pupuk, bibit, atau pestisida. Pemilik toko memindai kode QR dari aplikasi Flutter petani. Setelah sistem mencocokkan titik koordinat GPS transaksi (Geofencing), sisa token dipotong dari ledger database internal, dan dana tunai dicairkan berkala ke rekening pemilik toko di akhir pekan.',
+                box1: { title: 'Flutter Mobile App', sub: 'QR Scanning & Geofence' },
+                box2: { title: 'PostgreSQL / Ledger', sub: 'Pengurangan Kredit Tani' },
+                box3: { title: 'Payment API (Xendit)', sub: 'Disbursement Mingguan Toko' }
+            },
+            6: {
+                watermark: '6',
+                badge: 'FINANCIAL INCLUSION',
+                title: 'Eksplorasi Data Kredit Alternatif (KUR)',
+                desc: 'Seluruh histori data transaksi jual-beli panen dan penebusan pupuk sirkular petani yang tercatat aman di database PostgreSQL membentuk satu profil jejak finansial digital yang valid. Atas persetujuan petani, profil ini dapat diekspor menjadi format laporan credit scoring terstandar untuk membantu pihak Bank Himbara/BPD memberikan fasilitas Kredit Usaha Rakyat (KUR) mikro.',
+                box1: { title: 'PostgreSQL Database', sub: 'Rekam Transaksi Historis' },
+                box2: { title: 'SatuTani Credit Engine', sub: 'Alternative Credit Scoring' },
+                box3: { title: 'Bank Mitra (Himbara)', sub: 'Pencairan Dana KUR' }
+            }
+        };
+
+        // Select step and update dynamic simulator content
+        function selectFlowStep(stepNum) {
+            const data = flowSteps[stepNum];
+            if (!data) return;
+
+            // Reset step button states
+            for (let i = 1; i <= 6; i++) {
+                const btn = document.getElementById(`step-btn-${i}`);
+                if (i === stepNum) {
+                    btn.className = "p-2 text-xs font-bold rounded-lg bg-emerald-950/60 border border-emerald-600 text-emerald-400 transition-all";
+                } else {
+                    btn.className = "p-2 text-xs font-bold rounded-lg bg-slate-900 border border-transparent text-slate-400 hover:text-white transition-all";
+                }
+            }
+
+            // Update details
+            document.getElementById('step-watermark').innerText = data.watermark;
+            document.getElementById('step-badge').innerHTML = data.badge;
+            document.getElementById('step-title').innerText = data.title;
+            document.getElementById('step-description').innerText = data.desc;
+
+            // Update flow boxes
+            const box1 = document.getElementById('flow-box-1');
+            const box2 = document.getElementById('flow-box-2');
+            const box3 = document.getElementById('flow-box-3');
+
+            box1.querySelector('.flow-title').innerText = data.box1.title;
+            box1.querySelector('.flow-sub').innerText = data.box1.sub;
+
+            box2.querySelector('.flow-title').innerText = data.box2.title;
+            box2.querySelector('.flow-sub').innerText = data.box2.sub;
+
+            box3.querySelector('.flow-title').innerText = data.box3.title;
+            box3.querySelector('.flow-sub').innerText = data.box3.sub;
+        }
+    </script>
+</body>
+</html>
